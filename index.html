@@ -1,1 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cuestionario - UrbanStyle S.A.S.</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f8f8f8; color:#333; padding:20px; }
+    h2 { background:#222; color:#fff; padding:10px; border-radius:8px; }
+    .bloque { margin-bottom:25px; }
+    .pregunta { margin:12px 0; }
+    label { display:block; margin-bottom:6px; }
+    .opciones { margin-left:20px; }
+  </style>
+</head>
+<body>
+  <h1>Encuesta de satisfacción y recompra - UrbanStyle</h1>
+  
+  <div class="bloque">
+    <h2>Bloque A: Experiencia de compra</h2>
+    <div class="pregunta">
+      <label>1. ¿Qué tan satisfecho(a) está con la puntualidad de la entrega?</label>
+      <div class="opciones">
+        <input type="radio" name="p1" value="1"> Muy insatisfecho  
+        <input type="radio" name="p1" value="2"> Insatisfecho  
+        <input type="radio" name="p1" value="3"> Neutral  
+        <input type="radio" name="p1" value="4"> Satisfecho  
+        <input type="radio" name="p1" value="5"> Muy satisfecho
+      </div>
+    </div>
+    
+    <div class="pregunta">
+      <label>2. El producto recibido coincidió con lo que esperaba según fotos y descripciones.</label>
+      <div class="opciones">
+        <input type="radio" name="p2" value="1"> Muy en desacuerdo  
+        <input type="radio" name="p2" value="2"> En desacuerdo  
+        <input type="radio" name="p2" value="3"> Neutral  
+        <input type="radio" name="p2" value="4"> De acuerdo  
+        <input type="radio" name="p2" value="5"> Muy de acuerdo
+      </div>
+    </div>
+  </div>
+  
+  <div class="bloque">
+    <h2>Bloque B: Post-compra y servicio</h2>
+    <div class="pregunta">
+      <label>3. ¿Qué tan clara fue la información recibida sobre el envío de su pedido?</label>
+      <div class="opciones">
+        <input type="radio" name="p3" value="1"> Muy insatisfecho  
+        <input type="radio" name="p3" value="2"> Insatisfecho  
+        <input type="radio" name="p3" value="3"> Neutral  
+        <input type="radio" name="p3" value="4"> Satisfecho  
+        <input type="radio" name="p3" value="5"> Muy satisfecho
+      </div>
+    </div>
+    
+    <div class="pregunta">
+      <label>4. Si tuvo que hacer una devolución o reclamo, ¿qué tan satisfecho(a) quedó con la atención recibida?</label>
+      <div class="opciones">
+        <input type="radio" name="p4" value="1"> Muy insatisfecho  
+        <input type="radio" name="p4" value="2"> Insatisfecho  
+        <input type="radio" name="p4" value="3"> Neutral  
+        <input type="radio" name="p4" value="4"> Satisfecho  
+        <input type="radio" name="p4" value="5"> Muy satisfecho  
+        <input type="radio" name="p4" value="NA"> No aplicó
+      </div>
+    </div>
+  </div>
+  
+  <div class="bloque">
+    <h2>Bloque C: Fidelización y confianza</h2>
+    <div class="pregunta">
+      <label>5. ¿Qué tan probable es que vuelva a comprar en UrbanStyle en los próximos 6 meses?</label>
+      <div class="opciones">
+        <input type="radio" name="p5" value="1"> Muy improbable  
+        <input type="radio" name="p5" value="2"> Improbable  
+        <input type="radio" name="p5" value="3"> Neutral  
+        <input type="radio" name="p5" value="4"> Probable  
+        <input type="radio" name="p5" value="5"> Muy probable
+      </div>
+    </div>
+    
+    <div class="pregunta">
+      <label>6. En una escala de 0 a 10, ¿qué tan probable es que recomiende UrbanStyle a un amigo o familiar?</label>
+      <input type="number" name="p6" min="0" max="10">
+    </div>
+  </div>
+  
+</body>
+</html>
 
