@@ -1,1 +1,539 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Encuesta UrbanStyle — Recompra y Fidelización</title>
+  <style>
+    :root{
+      --bg:#0f1724; /* dark */
+      --card:#0b1220;
+      --muted:#94a3b8;
+      --accent:#06b6d4;
+      --accent-2:#7c3aed;
+      --text:#e6eef8;
+      --danger:#ff6b6b;
+      --success:#34d399;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,var(--bg),#051024);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .container{width:100%;max-width:920px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);padding:24px;border-radius:12px;box-shadow:0 6px 30px rgba(2,6,23,0.6)}
+    h1{margin:0 0 8px;font-size:20px}
+    p.lead{margin:0 0 18px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:18px}
+    aside{padding:14px;border-left:1px dashed rgba(255,255,255,0.03)}
+    label{display:block;font-size:14px;margin-bottom:6px}
+    .hint{font-size:13px;color:var(--muted);margin-bottom:12px}
+    .row{margin-bottom:14px}
+    .likert{display:flex;gap:8px}
+    .likert button{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);cursor:pointer}
+    .likert button.selected{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#021022;font-weight:600}
+    input[type="text"], input[type="number"], select, textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text)}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    button.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#021022;padding:10px 14px;border-radius:10px;border:0;cursor:pointer}
+    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 12px;border-radius:10px;color:var(--text);cursor:pointer}
+    .small{font-size:13px;color:var(--muted)}
+    .progress{height:10px;background:#041018;border-radius:999px;overflow:hidden;margin-bottom:16px}
+    .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0%}
+    .note{font-size:13px;color:var(--muted);margin-top:6px}
+    .error{color:var(--danger);font-size:13px}
+    .success{color:var(--success);font-size:13px}
+    .footer{display:flex;justify-content:space-between;align-items:center;margin-top:18px}
+    .nps-scale{display:flex;gap:6px;align-items:center}
+    .nps-scale input[type=range]{width:100%}
+    .attention{background:#071226;padding:10px;border-radius:8px;border:1px dashed rgba(255,255,255,0.03)}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}} 
+  </style>
+</head>
+<body>
+  <div class="container">
+    <form id="survey" class="card" novalidate aria-live="polite">
+      <h1>Encuesta: Recompra y Fidelización — UrbanStyle</h1>
+      <p class="lead">Tiempo estimado: <strong>6–8 minutos</strong>. Respuesta anónima. Sus respuestas ayudarán a mejorar la experiencia de compra.</p>
+
+      <div class="progress" aria-hidden><i id="progressBar"></i></div>
+
+      <div class="grid">
+        <main>
+          <!-- Consentimiento -->
+          <section id="consent" class="row" aria-labelledby="consentTitle">
+            <label id="consentTitle">Consentimiento informado</label>
+            <p class="hint">¿Acepta participar en esta encuesta breve y anónima sobre su experiencia de compra en UrbanStyle?</p>
+            <div style="display:flex;gap:10px">
+              <label><input type="radio" name="consent" value="sí" required> Sí, acepto</label>
+              <label><input type="radio" name="consent" value="no"> No, no acepto</label>
+            </div>
+            <p class="note">La encuesta requiere consentimiento para continuar.</p>
+          </section>
+
+          <!-- Filtro -->
+          <section id="filtro" class="row" aria-labelledby="filtroTitle">
+            <label id="filtroTitle">Filtro de elegibilidad</label>
+            <p class="hint">¿Ha comprado en UrbanStyle en los últimos 12 meses?</p>
+            <div style="display:flex;gap:12px">
+              <label><input type="radio" name="comprado" value="sí" required> Sí</label>
+              <label><input type="radio" name="comprado" value="no"> No</label>
+            </div>
+            <p class="note">Si selecciona "No", la encuesta terminará y le agradecemos su interés.</p>
+          </section>
+
+          <!-- Sección A: logística y calidad -->
+          <fieldset class="row" id="seccionA">
+            <legend><strong>Sección A — Experiencia de compra y logística</strong></legend>
+
+            <div class="row">
+              <label for="puntualidad">1. ¿Qué tan satisfecho(a) quedó con la puntualidad de la entrega?</label>
+              <div class="likert" role="radiogroup" aria-labelledby="puntualidad">
+                <button type="button" data-name="puntualidad" data-value="1">Muy insatisfecho</button>
+                <button type="button" data-name="puntualidad" data-value="2">Insatisfecho</button>
+                <button type="button" data-name="puntualidad" data-value="3">Neutral</button>
+                <button type="button" data-name="puntualidad" data-value="4">Satisfecho</button>
+                <button type="button" data-name="puntualidad" data-value="5">Muy satisfecho</button>
+              </div>
+              <input type="hidden" name="puntualidad" id="puntualidadInput" required aria-required="true">
+              <div class="note">(1 = Muy insatisfecho, 5 = Muy satisfecho)</div>
+            </div>
+
+            <div class="row">
+              <label for="claridadEnvio">2. ¿Cómo calificaría la claridad de la información sobre el envío y seguimiento?</label>
+              <div class="likert" role="radiogroup" aria-labelledby="claridadEnvio">
+                <button type="button" data-name="claridadEnvio" data-value="1">Muy mala</button>
+                <button type="button" data-name="claridadEnvio" data-value="2">Mala</button>
+                <button type="button" data-name="claridadEnvio" data-value="3">Regular</button>
+                <button type="button" data-name="claridadEnvio" data-value="4">Buena</button>
+                <button type="button" data-name="claridadEnvio" data-value="5">Muy buena</button>
+              </div>
+              <input type="hidden" name="claridadEnvio" id="claridadEnvioInput" required>
+            </div>
+
+            <div class="row">
+              <label for="coincidencia">3. El producto recibido coincidió con lo mostrado en la web/redes.</label>
+              <div class="likert" role="radiogroup" aria-labelledby="coincidencia">
+                <button type="button" data-name="coincidencia" data-value="1">Totalmente en desacuerdo</button>
+                <button type="button" data-name="coincidencia" data-value="2">En desacuerdo</button>
+                <button type="button" data-name="coincidencia" data-value="3">Ni de acuerdo ni en desacuerdo</button>
+                <button type="button" data-name="coincidencia" data-value="4">De acuerdo</button>
+                <button type="button" data-name="coincidencia" data-value="5">Totalmente de acuerdo</button>
+              </div>
+              <input type="hidden" name="coincidencia" id="coincidenciaInput" required>
+            </div>
+
+            <div class="row">
+              <label for="calidadMateriales">4. ¿Qué tan satisfecho(a) está con la calidad de los materiales del producto?</label>
+              <div class="likert" role="radiogroup" aria-labelledby="calidadMateriales">
+                <button type="button" data-name="calidadMateriales" data-value="1">Muy insatisfecho</button>
+                <button type="button" data-name="calidadMateriales" data-value="2">Insatisfecho</button>
+                <button type="button" data-name="calidadMateriales" data-value="3">Neutral</button>
+                <button type="button" data-name="calidadMateriales" data-value="4">Satisfecho</button>
+                <button type="button" data-name="calidadMateriales" data-value="5">Muy satisfecho</button>
+              </div>
+              <input type="hidden" name="calidadMateriales" id="calidadMaterialesInput" required>
+            </div>
+          </fieldset>
+
+          <!-- Sección B: precio -->
+          <fieldset class="row" id="seccionB">
+            <legend><strong>Sección B — Precio y valor percibido</strong></legend>
+
+            <div class="row">
+              <label for="comparacionPrecios">5. En comparación con competidores (Dafiti, Mercado Libre), los precios de UrbanStyle son:</label>
+              <select name="comparacionPrecios" id="comparacionPrecios" required aria-required="true">
+                <option value="">Seleccione...</option>
+                <option value="mas_bajos">Más bajos</option>
+                <option value="iguales">Iguales</option>
+                <option value="mas_altos">Más altos</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <label for="relacionPrecio">6. Considero que la relación calidad–precio de mi compra fue:</label>
+              <div class="likert" role="radiogroup" aria-labelledby="relacionPrecio">
+                <button type="button" data-name="relacionPrecio" data-value="1">Muy mala</button>
+                <button type="button" data-name="relacionPrecio" data-value="2">Mala</button>
+                <button type="button" data-name="relacionPrecio" data-value="3">Regular</button>
+                <button type="button" data-name="relacionPrecio" data-value="4">Buena</button>
+                <button type="button" data-name="relacionPrecio" data-value="5">Muy buena</button>
+              </div>
+              <input type="hidden" name="relacionPrecio" id="relacionPrecioInput" required>
+            </div>
+          </fieldset>
+
+          <!-- Sección C: experiencia digital y confianza -->
+          <fieldset class="row" id="seccionC">
+            <legend><strong>Sección C — Experiencia digital y confianza</strong></legend>
+
+            <div class="row">
+              <label for="navegacion">7. La navegación en el sitio/app fue sencilla e intuitiva.</label>
+              <div class="likert" role="radiogroup" aria-labelledby="navegacion">
+                <button type="button" data-name="navegacion" data-value="1">Totalmente en desacuerdo</button>
+                <button type="button" data-name="navegacion" data-value="2">En desacuerdo</button>
+                <button type="button" data-name="navegacion" data-value="3">Ni de acuerdo ni en desacuerdo</button>
+                <button type="button" data-name="navegacion" data-value="4">De acuerdo</button>
+                <button type="button" data-name="navegacion" data-value="5">Totalmente de acuerdo</button>
+              </div>
+              <input type="hidden" name="navegacion" id="navegacionInput" required>
+            </div>
+
+            <div class="row">
+              <label for="pago">8. El proceso de pago fue rápido y sin complicaciones.</label>
+              <div class="likert" role="radiogroup" aria-labelledby="pago">
+                <button type="button" data-name="pago" data-value="1">Totalmente en desacuerdo</button>
+                <button type="button" data-name="pago" data-value="2">En desacuerdo</button>
+                <button type="button" data-name="pago" data-value="3">Ni de acuerdo ni en desacuerdo</button>
+                <button type="button" data-name="pago" data-value="4">De acuerdo</button>
+                <button type="button" data-name="pago" data-value="5">Totalmente de acuerdo</button>
+              </div>
+              <input type="hidden" name="pago" id="pagoInput" required>
+            </div>
+
+            <div class="row">
+              <label for="confianza">9. Confío en UrbanStyle como marca y me siento seguro(a) al comprar allí.</label>
+              <div class="likert" role="radiogroup" aria-labelledby="confianza">
+                <button type="button" data-name="confianza" data-value="1">Totalmente en desacuerdo</button>
+                <button type="button" data-name="confianza" data-value="2">En desacuerdo</button>
+                <button type="button" data-name="confianza" data-value="3">Ni de acuerdo ni en desacuerdo</button>
+                <button type="button" data-name="confianza" data-value="4">De acuerdo</button>
+                <button type="button" data-name="confianza" data-value="5">Totalmente de acuerdo</button>
+              </div>
+              <input type="hidden" name="confianza" id="confianzaInput" required>
+            </div>
+          </fieldset>
+
+          <!-- Sección D: recompra y NPS -->
+          <fieldset class="row" id="seccionD">
+            <legend><strong>Sección D — Recompra y recomendación</strong></legend>
+
+            <div class="row">
+              <label for="recompra">10. ¿Qué tan probable es que vuelva a comprar en UrbanStyle en los próximos 6 meses?</label>
+              <div class="likert" role="radiogroup" aria-labelledby="recompra">
+                <button type="button" data-name="recompra" data-value="1">Muy improbable</button>
+                <button type="button" data-name="recompra" data-value="2">Poco probable</button>
+                <button type="button" data-name="recompra" data-value="3">Ni probable ni improbable</button>
+                <button type="button" data-name="recompra" data-value="4">Probable</button>
+                <button type="button" data-name="recompra" data-value="5">Muy probable</button>
+              </div>
+              <input type="hidden" name="recompra" id="recompraInput" required>
+            </div>
+
+            <div class="row">
+              <label for="nps">11. En una escala de 0 a 10, ¿qué tan probable es que recomiende UrbanStyle a un amigo o familiar?</label>
+              <div class="nps-scale">
+                <span class="small">0</span>
+                <input type="range" id="nps" name="nps" min="0" max="10" value="7" aria-label="NPS" required>
+                <span class="small">10</span>
+              </div>
+              <div class="note">(0 = Nada probable; 10 = Muy probable) <span id="npsValue"></span></div>
+            </div>
+          </fieldset>
+
+          <!-- Sección E: demográficos y control -->
+          <fieldset class="row" id="seccionE">
+            <legend><strong>Sección E — Datos demográficos</strong></legend>
+
+            <div class="row">
+              <label for="edad">12. Indique su edad (en años)</label>
+              <input type="number" id="edad" name="edad" min="14" max="120" required>
+            </div>
+
+            <div class="row">
+              <label for="genero">13. Indique su género</label>
+              <select id="genero" name="genero" required>
+                <option value="">Seleccione...</option>
+                <option value="masculino">Masculino</option>
+                <option value="femenino">Femenino</option>
+                <option value="no_binario">No binario</option>
+                <option value="prefiero_no_decir">Prefiero no decir</option>
+              </select>
+            </div>
+
+            <div class="row attention">
+              <label for="control">14. Atención (control): para confirmar que está leyendo, seleccione la opción <strong>"De acuerdo"</strong> a continuación.</label>
+              <select id="control" name="control" required>
+                <option value="">Seleccione...</option>
+                <option value="en_desacuerdo">En desacuerdo</option>
+                <option value="neutral">Neutral</option>
+                <option value="de_acuerdo">De acuerdo</option>
+              </select>
+            </div>
+
+          </fieldset>
+
+          <div class="row">
+            <label for="comentario">15. (Opcional) ¿Qué mejorarías para que vuelvas a comprar en UrbanStyle? (respuesta corta)</label>
+            <input type="text" id="comentario" name="comentario" maxlength="240" placeholder="Escribe tu sugerencia...">
+          </div>
+
+          <div class="row">
+            <div class="error" id="formError" role="alert" style="display:none"></div>
+            <div class="success" id="formSuccess" role="status" style="display:none"></div>
+            <div class="actions">
+              <button type="button" class="primary" id="submitBtn">Enviar respuestas</button>
+              <button type="button" class="ghost" id="saveLocal">Guardar en este dispositivo</button>
+              <button type="button" class="ghost" id="exportCSV">Exportar CSV</button>
+              <button type="button" class="ghost" id="exportJSON">Exportar JSON</button>
+              <input type="file" id="importJSON" accept="application/json" style="display:none">
+              <button type="button" class="ghost" id="importBtn">Importar JSON</button>
+            </div>
+          </div>
+
+        </main>
+
+        <aside aria-label="Instrucciones y ayuda">
+          <h3 style="margin-top:0">Instrucciones</h3>
+          <p class="small">Responda sobre <strong>su última compra</strong> en UrbanStyle (últimos 12 meses). Use el teclado o pantalla táctil. Campos obligatorios marcados con *.</p>
+          <h4 style="margin-bottom:6px">Progreso</h4>
+          <div id="progressText" class="small">0 / 15 respondidas</div>
+          <h4 style="margin-top:12px;margin-bottom:6px">Privacidad</h4>
+          <p class="small">La encuesta es anónima. Los datos se usarán únicamente para mejorar procesos y experiencia.</p>
+          <h4 style="margin-top:12px;margin-bottom:6px">Consejos</h4>
+          <ul class="small">
+            <li>Sea sincero: sus respuestas son valiosas.</li>
+            <li>Si no ha comprado en 12 meses, puede salir y no completar.</li>
+            <li>Use el botón 'Guardar' si desea continuar más tarde en el mismo dispositivo.</li>
+          </ul>
+        </aside>
+      </div>
+
+      <div class="footer">
+        <div class="small">UrbanStyle — Investigación de satisfacción y fidelización</div>
+        <div class="small">Plantilla: tutor de investigación en marketing</div>
+      </div>
+
+    </form>
+  </div>
+
+<script>
+// Utility helpers
+const qs = s => document.querySelector(s);
+const qsa = s => Array.from(document.querySelectorAll(s));
+
+// Handle likert buttons
+qsa('.likert button').forEach(btn=>{
+  btn.addEventListener('click', e=>{
+    const name = btn.dataset.name;
+    // unselect sibling buttons
+    qsa(`button[data-name="${name}"]`).forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    const val = btn.dataset.value;
+    const hidden = qs(`#${name}Input`);
+    if(hidden) hidden.value = val;
+    updateProgress();
+  })
+})
+
+// NPS live value
+const nps = qs('#nps');
+const npsValue = qs('#npsValue');
+if(nps){ npsValue.textContent = `Valor: ${nps.value}`; nps.addEventListener('input', ()=> npsValue.textContent = `Valor: ${nps.value}`) }
+
+// Progress tracking
+function updateProgress(){
+  const total = 15; // total items considered
+  let answered = 0;
+  // count filled fields
+  const fields = ['consent','comprado','puntualidad','claridadEnvio','coincidencia','calidadMateriales','comparacionPrecios','relacionPrecio','navegacion','pago','confianza','recompra','nps','edad','genero','control'];
+  fields.forEach(name=>{
+    const el = document.getElementsByName(name)[0] || qs(`#${name}`) || qs(`#${name}Input`);
+    if(!el) return;
+    if(el.type === 'radio'){
+      const any = Array.from(document.getElementsByName(name)).some(r=>r.checked);
+      if(any) answered++;
+    } else if(el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA'){
+      if(el.value !== '') answered++;
+    } else {
+      if(el.value && el.value !== '') answered++;
+    }
+  })
+  const pct = Math.round((answered/total)*100);
+  qs('#progressBar').style.width = pct + '%';
+  qs('#progressText').textContent = `${answered} / ${total} respondidas`;
+}
+
+// initial progress
+updateProgress();
+
+// Consent and filter behavior
+qsa('input[name="consent"]').forEach(r=>r.addEventListener('change', ()=>{
+  const consent = document.querySelector('input[name="consent"]:checked')?.value;
+  if(consent === 'no'){
+    showMessage('Debe aceptar para continuar', true);
+  } else { hideMessage(); }
+  updateProgress();
+}))
+
+qsa('input[name="comprado"]').forEach(r=>r.addEventListener('change', ()=>{
+  const val = document.querySelector('input[name="comprado"]:checked')?.value;
+  if(val === 'no'){
+    // hide survey fields and thank
+    document.querySelectorAll('fieldset, #seccionA, #seccionB, #seccionC, #seccionD, #seccionE').forEach(f=>f.style.display='none');
+    qs('#formSuccess').style.display='block'; qs('#formSuccess').textContent = 'Gracias por su interés. Esta versión está dirigida a clientes recientes. ¡Gracias!';
+  } else {
+    document.querySelectorAll('fieldset, #seccionA, #seccionB, #seccionC, #seccionD, #seccionE').forEach(f=>f.style.display='block');
+    qs('#formSuccess').style.display='none';
+  }
+  updateProgress();
+}))
+
+function showMessage(msg, isError){
+  const el = qs('#formError');
+  el.style.display='block'; el.textContent = msg;
+  if(!isError){ el.style.display='none'; }
+}
+function hideMessage(){ qs('#formError').style.display='none'; }
+
+// Validation on submit
+qs('#submitBtn').addEventListener('click', ()=>{
+  hideMessage(); qs('#formSuccess').style.display='none';
+  // simple required check
+  const required = ['consent','comprado','puntualidadInput','claridadEnvioInput','coincidenciaInput','calidadMaterialesInput','comparacionPrecios','relacionPrecioInput','navegacionInput','pagoInput','confianzaInput','recompraInput','nps','edad','genero','control'];
+  const missing = [];
+  for(const name of required){
+    const el = document.getElementsByName(name)[0] || qs(`#${name}`) || qs(`#${name}Input`);
+    if(!el) { console.warn('no existe', name); continue; }
+    let val = el.value;
+    if(el.type === 'radio'){ val = Array.from(document.getElementsByName(name)).some(r=>r.checked) ? 'ok' : '' }
+    if(val === '' || val == null) missing.push(name);
+  }
+  if(missing.length > 0){ showMessage('Faltan respuestas en campos obligatorios. Revise el formulario.'); return; }
+  // attention control check
+  if(qs('#control').value !== 'de_acuerdo'){ showMessage('Respuesta inválida en el control de atención.'); return; }
+
+  // collect data
+  const data = collectData();
+  // store to localStorage 'urbanstyle_survey_responses' array
+  const key = 'urbanstyle_survey_responses';
+  const existing = JSON.parse(localStorage.getItem(key) || '[]');
+  existing.push({submittedAt: new Date().toISOString(), ...data});
+  localStorage.setItem(key, JSON.stringify(existing));
+  qs('#formSuccess').style.display='block'; qs('#formSuccess').textContent = 'Gracias. Sus respuestas han sido registradas localmente.';
+  updateProgress();
+})
+
+function collectData(){
+  const getRadio = name=>{
+    const r = document.querySelector(`button[data-name="${name}"].selected`);
+    if(r) return r.dataset.value;
+    const radios = document.getElementsByName(name);
+    if(radios.length) return Array.from(radios).find(x=>x.checked)?.value || '';
+    const el = qs(`#${name}`) || qs(`[name="${name}"]`);
+    return el ? el.value : '';
+  }
+  return {
+    consent: document.querySelector('input[name="consent"]:checked')?.value || '',
+    comprado: document.querySelector('input[name="comprado"]:checked')?.value || '',
+    puntualidad: getRadio('puntualidad'),
+    claridadEnvio: getRadio('claridadEnvio'),
+    coincidencia: getRadio('coincidencia'),
+    calidadMateriales: getRadio('calidadMateriales'),
+    comparacionPrecios: qs('#comparacionPrecios').value,
+    relacionPrecio: getRadio('relacionPrecio'),
+    navegacion: getRadio('navegacion'),
+    pago: getRadio('pago'),
+    confianza: getRadio('confianza'),
+    recompra: getRadio('recompra'),
+    nps: qs('#nps').value,
+    edad: qs('#edad').value,
+    genero: qs('#genero').value,
+    control: qs('#control').value,
+    comentario: qs('#comentario').value
+  }
+}
+
+// Save local button
+qs('#saveLocal').addEventListener('click', ()=>{
+  const data = collectData();
+  localStorage.setItem('urbanstyle_survey_draft', JSON.stringify({savedAt:new Date().toISOString(), data}));
+  qs('#formSuccess').style.display='block'; qs('#formSuccess').textContent = 'Borrador guardado en este dispositivo.';
+})
+
+// Export CSV
+qs('#exportCSV').addEventListener('click', ()=>{
+  const key = 'urbanstyle_survey_responses';
+  const arr = JSON.parse(localStorage.getItem(key) || '[]');
+  if(!arr.length){ showMessage('No hay respuestas guardadas para exportar.'); return; }
+  const csv = toCSV(arr);
+  downloadFile(csv, 'urbanstyle_responses.csv', 'text/csv');
+})
+
+function toCSV(objArray){
+  const array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+  let str = '';
+  const header = Object.keys(array[0]);
+  str += header.join(',') + '\n';
+  for(let i=0;i<array.length;i++){
+    let line = '';
+    for(let j=0;j<header.length;j++){
+      if(j) line += ',';
+      let val = array[i][header[j]] === null || array[i][header[j]] === undefined ? '' : String(array[i][header[j]]).replace(/"/g,'""');
+      if(val.indexOf(',') >=0 || val.indexOf('\n')>=0) val = `"${val}"`;
+      line += val;
+    }
+    str += line + '\n';
+  }
+  return str;
+}
+
+function downloadFile(data, filename, type){
+  const file = new Blob([data], {type: type});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(file);
+  a.download = filename;
+  a.click();
+}
+
+// Export JSON
+qs('#exportJSON').addEventListener('click', ()=>{
+  const key = 'urbanstyle_survey_responses';
+  const arr = JSON.parse(localStorage.getItem(key) || '[]');
+  if(!arr.length){ showMessage('No hay respuestas guardadas para exportar.'); return; }
+  downloadFile(JSON.stringify(arr, null, 2), 'urbanstyle_responses.json', 'application/json');
+})
+
+// Import JSON
+qs('#importBtn').addEventListener('click', ()=> qs('#importJSON').click());
+qs('#importJSON').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt){
+    try{
+      const data = JSON.parse(evt.target.result);
+      // overwrite local responses
+      localStorage.setItem('urbanstyle_survey_responses', JSON.stringify(data));
+      qs('#formSuccess').style.display='block'; qs('#formSuccess').textContent = 'Respuestas importadas correctamente en este dispositivo.';
+    } catch(err){ showMessage('Archivo JSON inválido.'); }
+  }
+  reader.readAsText(file);
+})
+
+// On load: try to restore draft
+window.addEventListener('load', ()=>{
+  const draft = JSON.parse(localStorage.getItem('urbanstyle_survey_draft') || 'null');
+  if(draft && draft.data){
+    const d = draft.data;
+    setTimeout(()=>{
+      if(d.consent) document.querySelectorAll('input[name="consent"]').forEach(r=>{ if(r.value===d.consent) r.checked=true });
+      if(d.comprado) document.querySelectorAll('input[name="comprado"]').forEach(r=>{ if(r.value===d.comprado) r.checked=true });
+      ['puntualidad','claridadEnvio','coincidencia','calidadMateriales','relacionPrecio','navegacion','pago','confianza','recompra'].forEach(k=>{
+        if(d[k]){
+          const btn = document.querySelector(`button[data-name="${k}"][data-value="${d[k]}"]`);
+          if(btn) btn.click();
+        }
+      });
+      if(d.comparacionPrecios) qs('#comparacionPrecios').value = d.comparacionPrecios;
+      if(d.nps) qs('#nps').value = d.nps; if(d.nps) npsValue.textContent = `Valor: ${d.nps}`;
+      if(d.edad) qs('#edad').value = d.edad;
+      if(d.genero) qs('#genero').value = d.genero;
+      if(d.control) qs('#control').value = d.control;
+      if(d.comentario) qs('#comentario').value = d.comentario;
+      updateProgress();
+    },300);
+  }
+});
+
+</script>
+</body>
+</html>
 
